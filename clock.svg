@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="206px"
+  height="206px"
+  viewBox="0 0 206 206"
+  onload="build_and_start();"
+  >
+  <style type="text/css">
+    <![CDATA[
+      #clock {
+        stroke: black;
+        fill: none;
+      }
+      #clock text {
+        stroke: none;
+        fill: black;
+        text-anchor: middle;
+      }
+      circle {
+        stroke-width: 5px;
+      }
+      #small {
+        stroke-width: 1px;
+      }
+      .whyle_20 {
+        stroke-width: 5px;
+      }
+      .whyle_05 {
+        stroke-width: 2px;
+      }
+      .whyle_01 {
+        stroke-width: 1px;
+      }
+      .wh {
+        stroke: red;
+        fill: none;
+      }
+      #whylehand {
+        stroke-width: 8px;
+      }
+      #whyleknob {
+        stroke-width: 4px;
+      }
+      .mh {
+        stroke: blue;
+        fill: none;
+      }
+      #momhand {
+        stroke-width: 3px;
+      }
+      #momknob {
+        stroke-width: 2px;
+      }
+      .th {
+        stroke: #006600;
+        fill: none;
+      }
+      #tichand {
+        stroke-width: 2px;
+      }
+      #ticknob {
+        stroke-width: 1px;
+      }
+    ]]>
+  </style>
+  <script type="text/javascript">
+    <![CDATA[
+      function build_and_start() {
+        build_clock();
+        start_clock();
+      }
+
+      function build_clock() {
+        var ce_g = document.getElementById("clock")
+        for (var i = 0; i < 100; ++i) {
+          var pathobj = document.createElementNS("http://www.w3.org/2000/svg", 'path');
+          rotstring = "rotate(" + i * 3.6 + ")";
+          pathobj.setAttribute("transform", rotstring);
+          if (i % 25 == 0) {
+            pathobj.setAttribute("d", "M 0,-88 V -100");
+            pathobj.setAttribute("class", "whyle_20");
+          }
+          else if (i % 5 == 0) {
+            pathobj.setAttribute("d", "M 0,-93 V -100");
+            pathobj.setAttribute("class", "whyle_05");
+          }
+          else {
+            pathobj.setAttribute("d", "M 0,-96 V -100");
+            pathobj.setAttribute("class", "whyle_01");
+          }
+          if (i % 5 == 0) {
+            var text = document.createElementNS("http://www.w3.org/2000/svg", 'text');
+            text.setAttribute("transform", rotstring + " translate(0,-80) rotate("
+                + (i * -3.6) + ")");
+            text.textContent = "" + (i / 5);
+            text.setAttribute("y", "4");
+            ce_g.appendChild(text);
+          }
+          ce_g.appendChild(pathobj);
+        }
+      }
+
+      async function start_clock() {
+        var d = new Date();
+        var seconds = d.getHours() * 3600 + d.getMinutes() * 60 + d.getSeconds() + .001 * d.getMilliseconds();
+        var tics = seconds / .864;
+        var whyle = tics / 1000;
+        var tic = Math.round(tics % 1000, 0);
+        var daypart = whyle / 20;
+        var daywhyle = Math.floor(whyle % 20, 0) + .1 * Math.floor(tic / 100, 0);
+        console.log(daywhyle + ":" + tic);
+        wh = document.getElementById("whylehand");
+        mh = document.getElementById("momhand");
+        th = document.getElementById("tichand");
+        wh.setAttribute("transform", "rotate(" + daywhyle * 18 + ")");
+        mh.setAttribute("transform", "rotate(" + Math.floor(tic / 10, 0) * 3.6 + ")");
+        th.setAttribute("transform", "rotate(" + tic % 10 * 36 + ")");
+        setTimeout(start_clock, 864);
+      }
+    ]]>
+  </script>
+  <rect x="0" y="0" width="206" height="206" style="stroke-width:1; stroke: red; fill:none;"/>
+  <g id="clock" transform="translate(103,103)">
+    <circle r="100" />
+    <circle id="small" r="12" cx="30" cy="-30"/>
+  </g>
+  <g id="hands" transform="translate(103,103)">
+    <g transform="translate(30,-30)">
+      <circle class="th" id="ticknob" r="1" />
+      <path class="th" id="tichand"   d="M 0,-1 V -10"/>
+    </g>
+    <circle class="wh" id="whyleknob" r="6" />
+    <path class="wh" id="whylehand" d="M 0,-6 V -50"/>
+    <circle class="mh" id="momknob" r="3" />
+    <path class="mh" id="momhand"   d="M 0,-3 V -80"/>
+  </g>
+
+</svg>

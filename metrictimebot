@@ -1,0 +1,34 @@
+#!/usr/bin/python3
+
+"""Twitter bot for metric time info"""
+
+import argparse
+from datetime import datetime, date
+import sys
+from time import sleep
+import tweepy
+
+import metricera
+
+if __name__ == "__main__":
+    md = metricera.today()
+    greetings = {metricera.LEFDAY: 'Happy Midstreek',
+                 metricera.MOONDAY: 'Happy Streekend',
+                 metricera.HELIDAY: 'Happy Streekend! A day to rest'
+                }
+    
+    message_lines = [
+        "Heute ist {:de}".format(md),
+        "Today is {:en}".format(md),
+        greetings.get(md.streekday, None),
+        "#metricdate",
+        "",
+        # "Es ist / the time is {}".format(Date.metrictime.from_ce_time()),
+        "#metrictime",
+    ]
+    msg = '\n'.join([ml for ml in message_lines if ml is not None])
+    import credentials
+    auth = tweepy.OAuthHandler(credentials.consumer_key, credentials.consumer_secret)
+    auth.set_access_token(credentials.access_token, credentials.access_token_secret)
+    twit = tweepy.API(auth)
+    twit.update_status(msg)
