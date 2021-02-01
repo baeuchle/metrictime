@@ -1,9 +1,19 @@
 import datetime
 from .Date import Date
+from .Time import Time
 from .Season import days_in_season, WINTUARY, LENTUARY, THERANTER, AUTUNE
 
-def from_ce_time(time):
-    pass
+def from_ce_time(*args):
+    ce_time = None
+    if len(args) == 3:
+        ce_time = datetime.time(*args)
+    elif type(args[0]) == datetime.time:
+        ce_time = args[0]
+    elif type(args[0]) == datetime.datetime:
+        t = args[0]
+        ce_time = datetime.time(t.hour, t.minute, t.second, t.microsecond)
+    secs = ce_time.hour * 3600 + ce_time.minute * 60 + ce_time.second + 1e-6 * ce_time.microsecond
+    return Time(1e5 * secs / 86400)
 
 def get_yearstart_(ce_year):
     """This is valid between 1941CE and 2068CE, only."""
@@ -52,4 +62,4 @@ def today():
     return from_ce_date(datetime.date.today())
 
 def now():
-    pass
+    return from_ce_time(datetime.datetime.now())

@@ -37,3 +37,7 @@ def test_from_ce():
 def test_today():
     date = today()
     assert(date)
+
+def test_now():
+    time = now()
+    assert(time)
